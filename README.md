@@ -1,0 +1,2 @@
+# vezdekod-go
+оаоао
