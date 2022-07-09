@@ -26,3 +26,54 @@ Usage of ./main:
   -max_workers int
         The number of workers to start (default 2)
 ```
+
+## Задание 40
+
+Билдим и запускаем сервер
+```bash
+ $ cd server
+ $ go build main.go && ./main -port 8000
+```
+
+Билдим и запускаем тестилку для него
+```bash
+ $ cd tester
+ $ go build main.go && ./main
+```
+
+Тестилка проверяет три основных use-кейса и никого не дудосит, потому что зачем?)
+
+*Тесты могли бы быть и лучше, но времени у нас не так много...*
+
+### Запросы к серверу
+
+#### Создание задачи
+
+```bash
+# создаем задачу асинхронно на 5 секунд
+ $ curl -X POST -H "Content-Type: application/json" --data '{"duration": "5s"}' http://localhost:8000/add/async
+
+# создаем задачу синхронно на 10 секунд (соединение будет открыто на протяжении этого времени)
+ $ curl -X POST -H "Content-Type: application/json" --data '{"duration": "10s"}' http://localhost:8000/add/sync
+
+```
+
+P.S. Если не указывать поле name в JSONе, то оно будет случайным
+
+P.P.S. Будет код ответа 400, если тело запроса некорректно
+
+#### Получение очереди задач
+
+```bash
+ $ curl http://localhost:8000/schedule
+ # получаем JSON вида [{"name":"2","duration":"1s"}]
+ # (или null, если очередь пуста)
+```
+
+#### Получение временной оценки
+
+```bash
+ $ curl http://localhost:8000/time
+ # получаем текстовый ответ вида 40s
+```
+
